@@ -1,5 +1,7 @@
-torch==2.8.0
-torchaudio==2.8.0
+torch==2.9.0
+torchaudio==2.9.0
+soundfile==0.12.1
+werkzeug==3.0.3
 numpy
 pandas
 librosa
@@ -10,3 +12,4 @@ flask
 tqdm
 ipython
 requests
+pydub
