@@ -1,0 +1,12 @@
+torch==2.8.0
+torchaudio==2.8.0
+numpy
+pandas
+librosa
+soundfile
+openai-whisper
+jiwer
+flask
+tqdm
+ipython
+requests

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSRNN | Очистка шума</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; text-align: center; }
+        .upload-box { border: 2px dashed #ccc; padding: 30px; margin-bottom: 20px; border-radius: 10px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; }
+        button:disabled { background: #ccc; }
+        #result { margin-top: 30px; display: none; }
+        .loader { display: none; margin-top: 15px; font-style: italic; color: #666; }
+    </style>
+</head>
+<body>
+
+    <h1>Очистка аудио (BSRNN)</h1>
+    
+    <div class="upload-box">
+        <form id="uploadForm">
+            <input type="file" name="audio" accept="audio/*" required>
+            <br><br>
+            <button type="submit" id="submitBtn">Очистить от шума</button>
+        </form>
+        <div class="loader" id="loader">Нейросеть обрабатывает файл, подождите...</div>
+    </div>
+
+    <div id="result">
+        <h3>Очищенное аудио:</h3>
+        <audio id="audioPlayer" controls></audio>
+        <br><br>
+        <a id="downloadLink" href="#" download="cleaned_audio.wav">Скачать .wav</a>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').onsubmit = async (e) => {
+            e.preventDefault(); // Предотвращаем перезагрузку страницы
+            
+            const btn = document.getElementById('submitBtn');
+            const loader = document.getElementById('loader');
+            const resultDiv = document.getElementById('result');
+            const audioPlayer = document.getElementById('audioPlayer');
+            const downloadLink = document.getElementById('downloadLink');
+            
+            btn.disabled = true;
+            loader.style.display = 'block';
+            resultDiv.style.display = 'none';
+
+            let formData = new FormData(e.target);
+
+            try {
+                let response = await fetch('/process', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    let blob = await response.blob();
+                    let url = URL.createObjectURL(blob);
+                    
+                    audioPlayer.src = url;
+                    downloadLink.href = url;
+                    resultDiv.style.display = 'block';
+                } else {
+                    let errorText = await response.text();
+                    alert("Ошибка сервера: " + errorText);
+                }
+            } catch (error) {
+                alert("Ошибка сети при отправке файла.");
+            } finally {
+                btn.disabled = false;
+                loader.style.display = 'none';
+            }
+        };
+    </script>
+
+</body>
+</html>
