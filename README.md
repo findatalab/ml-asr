@@ -1,8 +1,10 @@
 # ml-asr
-Overview
+
+##Overview
 
 This project implements a Speech Enhancement (Denoising) system using a Band-Split Recurrent Neural Network (BSRNN). Built with PyTorch, the repository includes a complete pipeline from training on noisy audio to an interactive Flask-based Minimum Viable Product (MVP) web interface. The system allows users to record their voice, apply synthetic environmental noise (Babble, Room Impulse Response, or White Noise), and process it through the neural network to recover clean speech.
-Project Goals
+
+##Project Goals
 
     Effective Noise Suppression: Implement a state-of-the-art BSRNN architecture to separate clean speech from background noise in the frequency domain.
 
@@ -12,7 +14,7 @@ Project Goals
 
     Accessible Interface: Provide an easy-to-use web UI to demonstrate real-time audio capture and model inference capabilities.
 
-Data
+##Data
 
 The model is trained using a combination of clean speech and synthetic noise overlays:
 
@@ -24,7 +26,7 @@ The model is trained using a combination of clean speech and synthetic noise ove
 
         White Noise: Synthetically generated normal distribution noise.
 
-Methodology
+##Methodology
 
 The training pipeline utilizes on-the-fly data augmentation. During training, clean speech segments are randomly mixed with one of the noise profiles at varying Signal-to-Noise Ratios (SNR) ranging from -5 dB to 15 dB.
 
@@ -34,7 +36,7 @@ To optimize the model, a custom Combined Loss Function is used:
 
     Multi-Resolution STFT Loss: Computes Spectral Convergence and Log-Magnitude loss across multiple FFT sizes (512, 1024, 2048) to ensure high fidelity in the frequency domain.
 
-Model
+##Model
 
 The core architecture is defined in model.py and relies on the Band-Split RNN (BSRNN) design. It operates in the complex Short-Time Fourier Transform (STFT) domain. The architecture consists of four main components:
 
@@ -46,7 +48,7 @@ The core architecture is defined in model.py and relies on the Band-Split RNN (B
 
     MaskEstimator: Generates a complex mask (Real and Imaginary parts) which is applied to the noisy input spectrogram to filter out the noise, followed by an Inverse STFT to reconstruct the time-domain waveform.
 
-Installation
+##Installation
 
 Ensure you have Python 3.8+ installed. You can install the required dependencies using pip:
 Bash
@@ -57,7 +59,7 @@ pip install torch==2.8.0 torchaudio==2.8.0
 # Install remaining dependencies
 pip install Flask soundfile numpy pandas librosa openai-whisper jiwer tqdm ipython
 
-How to Run
+##How to Run
 1. Training the Model
 
 To start the training and evaluation pipeline, ensure your dataset archive (ru_train_0_19.tar) and metadata (train(1).tsv) are in the root directory, then run:
@@ -74,7 +76,8 @@ Bash
 python app.py
 
 Open your browser and navigate to http://127.0.0.1:5000.
-Example
+
+##Example
 
 Once the Flask web application is running:
 
@@ -94,7 +97,7 @@ Once the Flask web application is running:
 
         Denoised: The neural network's cleaned output.
 
-Evaluation
+##Evaluation
 
 The evaluation pipeline (in BRSNN.py) utilizes OpenAI's Whisper (large-v3) to transcribe the audio. The effectiveness of the model is measured using:
 
@@ -102,7 +105,7 @@ The evaluation pipeline (in BRSNN.py) utilizes OpenAI's Whisper (large-v3) to tr
 
     SI-SDR Improvement (dB): Measures the absolute decibel gain in signal clarity between the noisy input and the denoised output.
 
-Limitations
+##Limitations
 
     Sample Rate Restriction: The model strictly operates at a 16 kHz sample rate. Files with different rates are automatically resampled, which may lead to loss of high-frequency data.
 
@@ -110,7 +113,7 @@ Limitations
 
     Browser Formatting: WebM audio recorded directly from standard browsers requires specific handling. Currently, the backend reads it via soundfile, which may occasionally require an intermediate ffmpeg conversion depending on browser implementations.
 
-Future Improvements
+##Future Improvements
 
     Real-time Streaming Inference: Porting the block-based STFT processing to handle continuous buffer streams rather than file-by-file processing.
 
@@ -118,6 +121,6 @@ Future Improvements
 
     Quantization: Applying INT8 quantization or ONNX runtime optimization to speed up CPU inference for edge deployment.
 
-License
+##License
 
 This project is licensed under the MIT License.
