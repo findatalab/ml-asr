@@ -32,15 +32,12 @@
 1. Подготовка окружения
 
 Рекомендуется использовать изолированное виртуальное окружение:
-Bash
 
 python -m venv venv
-source venv/bin/activate  # для Linux/macOS
-# или
-venv\Scripts\activate     # для Windows
+
+venv\Scripts\activate 
 
 2. Установка зависимостей
-Bash
 
 pip install torch torchaudio flask soundfile
 
@@ -48,7 +45,6 @@ pip install torch torchaudio flask soundfile
 
 Файл с весами bsrnn_weights_final.pth должен быть расположен в директории models/. При отсутствии файла модель будет инициализирована случайными весами.
 4. Запуск приложения
-Bash
 
 python app.py
 
